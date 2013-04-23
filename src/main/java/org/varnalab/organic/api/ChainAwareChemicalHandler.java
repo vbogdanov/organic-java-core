@@ -25,7 +25,8 @@ public class ChainAwareChemicalHandler {
 
 	private void handle(Chemical chemical, Organel sender, Iterator<ChainAwareChemicalHandler> chain, Runnable callback) {
 		boolean done = false;
-		boolean skip = once && used; 
+		boolean skip = once && used;
+		skip |= receiver == sender;
 		if (! skip) { 
 			done = handler.handle(chemical, sender,  callback);
 		}
