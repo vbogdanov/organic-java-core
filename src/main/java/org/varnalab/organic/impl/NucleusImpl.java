@@ -15,6 +15,8 @@ public class NucleusImpl implements Nucleus {
 
 	private DNA dna;
 	private Plasma plasma;
+	private Map<Object, Organel> organelMap;
+	
 	
 	public NucleusImpl(DNA dna, Plasma plasma) {
 		super();
@@ -24,6 +26,8 @@ public class NucleusImpl implements Nucleus {
 
 	
 	private static final String SOURCE = "source";
+	private static final String ADDRESS = "address";
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -51,17 +55,19 @@ public class NucleusImpl implements Nucleus {
 				| IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException
 				| ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	      
 	      result.add(instance);
 	      
-	      //FIXME:
-	      //var address = (typeof objectConfig.address !== "undefined") ? objectConfig.address : (namespace + objectId);
-	      //this.organellesMap[address] = { "instance": instance };
+	      Object address = createAddress(config, namespace, key);
+	      organelMap.put(address, instance);
 	    }
 	  	return result;
+	}
+	
+	protected Object createAddress(Map<String, Object> config, String namespace, String key) {
+		return config.containsKey(ADDRESS) ? config.get(ADDRESS) : (namespace + "." + key);
 	}
 
 }

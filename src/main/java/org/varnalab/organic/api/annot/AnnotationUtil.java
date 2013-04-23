@@ -81,7 +81,7 @@ public class AnnotationUtil {
 	}
 	
 	private static void handleChemicalAnnotationsOnMethod(final Method m, final Organel org, Plasma plasma) {
-		Chem on = m.getAnnotation(Chem.class);
+		On on = m.getAnnotation(On.class);
 		if (on != null) {
 			Object pattern = on.value();
 			if (pattern.equals("[type]")) {

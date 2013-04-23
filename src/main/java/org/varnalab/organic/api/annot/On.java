@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Chem {
+public @interface On {
 	public String value() default "[type]";
 	public Class<?> type() default Object.class;
 	public boolean once() default false;
