@@ -12,4 +12,5 @@ public interface Plasma {
 	public void off(Object chemicalPattern, ChemicalHandler handler,
 			Organel organel);
 
+	public void unregisterAll(Organel organel);
 }

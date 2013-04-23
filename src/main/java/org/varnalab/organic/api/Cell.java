@@ -2,6 +2,9 @@ package org.varnalab.organic.api;
 
 import java.util.Collection;
 
+import org.varnalab.organic.impl.NucleusImpl;
+import org.varnalab.organic.impl.PlasmaImpl;
+
 /*
  * var cluster = require('cluster');
  * var util = require("util");
@@ -19,20 +22,17 @@ public class Cell implements Organic {
 
 		@Override
 		public Membrane createMembrane(Nucleus nucleus, Plasma plasma) {
-			// TODO Auto-generated method stub
-			return null;
+			return new Membrane(plasma, nucleus);
 		}
 
 		@Override
 		public Nucleus createNucleus(DNA dna, Plasma plasma) {
-			// TODO Auto-generated method stub
-			return null;
+			return new NucleusImpl(dna, plasma);
 		}
 
 		@Override
 		public Plasma createPlasma() {
-			// TODO Auto-generated method stub
-			return null;
+			return new PlasmaImpl();
 		}
 		
 	}

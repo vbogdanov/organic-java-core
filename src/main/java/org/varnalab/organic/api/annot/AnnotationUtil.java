@@ -51,8 +51,7 @@ public class AnnotationUtil {
 		}
 
 		@Override
-		public void handle(Chemical chemical, Organel sender,
-				Organel receiver, Runnable callback) {
+		public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
 			int size = m.getParameterTypes().length;
 			Object args[] = null;
 			switch (size) {
@@ -65,18 +64,16 @@ public class AnnotationUtil {
 			case 3:
 				args = new Object[]{ chemical, sender, callback };
 				break;
-			case 4:
-				args = new Object[]{ chemical, sender, receiver, callback };
-				break;
 			default:
 				break;
 			}
 			try {
-				m.invoke(org, args);
+				return (boolean) m.invoke(org, args);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
 				e.printStackTrace();
 			}
+			return false;
 		}
 	}
 	
