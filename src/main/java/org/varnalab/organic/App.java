@@ -24,6 +24,15 @@ public class App
 			@Override
 			public void run() {
 				Cell cell = new Cell(dna, null);
+				
+				try {
+					synchronized (cell) {
+						cell.wait();
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
         

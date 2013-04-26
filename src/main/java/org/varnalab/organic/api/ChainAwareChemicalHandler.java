@@ -27,6 +27,7 @@ public class ChainAwareChemicalHandler {
 		boolean done = false;
 		boolean skip = once && used;
 		skip |= receiver == sender;
+		
 		if (! skip) { 
 			done = handler.handle(chemical, sender,  callback);
 		}
@@ -45,7 +46,8 @@ public class ChainAwareChemicalHandler {
 	}
 	
 	public static void enqueChain(final Iterator<ChainAwareChemicalHandler> chain, final Chemical chemical, final Organel sender, final Runnable callback){
-		chain.next().enqueue(chemical, sender, chain, callback);
+		if (chain.hasNext())
+			chain.next().enqueue(chemical, sender, chain, callback);
 	}
 
 	//Auto-generated on receiver, handler and once

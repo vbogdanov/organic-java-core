@@ -25,9 +25,10 @@ public abstract class Organel implements Organic {
 		public void run() {
 			try {
 				while(! thread.isInterrupted()) {
-					queue.poll().run();
+					queue.take().run();
 				}
 			} catch (Exception e) {
+				e.printStackTrace(); //use logging
 				//TODO: react to the organel thread dying
 				// Unregister from the plasma
 				plasma.unregisterAll(Organel.this);
@@ -40,13 +41,14 @@ public abstract class Organel implements Organic {
 	public Organel(Plasma plasma, Organic parent, Map<String, Object> config) {
 		super();
 		
-		if (plasma == null || parent == null || config == null) {
+		if (plasma == null) {
 			throw new IllegalArgumentException();
 		}
 		
 		this.plasma = plasma;
 		this.parent = parent;
 		this.config = config;
+		thread.start();
 	}
 	
 	/**
