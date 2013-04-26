@@ -1,13 +1,14 @@
 package org.varnalab.organic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.lang.invoke.VolatileCallSite;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,14 +21,23 @@ import org.varnalab.organic.impl.SimpleChemical;
 
 @RunWith(Parameterized.class)
 public class PlasmaTests {
-    public Plasma plasma;
+    public Class<Plasma> plasmaClass;
+    
+    private Plasma plasma;
+    
+    @Before
+    public void setUp() throws InstantiationException, IllegalAccessException {
+    	System.out.println("creating plasma");
+    	plasma = plasmaClass.newInstance();
+    }
+    
     private Organel getFakeOrganel(Plasma plasma) {
     	return new Organel(plasma, null, null){};
     }
 
-    public PlasmaTests(Plasma plasma) {
+    public PlasmaTests(Class<Plasma> plasmaClass) {
 		super();
-		this.plasma = plasma;
+		this.plasmaClass = plasmaClass;
 	}
 
 	@Test
@@ -43,40 +53,109 @@ public class PlasmaTests {
 		//no exceptions were thrown
 	}
 	
-	private static final String PATTERN_1 = "pattern_1";
+	private static final String PATTERN = "pattern_1";
+	
 	@Test
 	public void testEmitSingleOn() throws Exception {
 		final Organel _receiver = getFakeOrganel(plasma);
 		final Organel _sender = getFakeOrganel(plasma);
-		final Chemical _chemical = new SimpleChemical<Object>(PATTERN_1, null);
+		final Chemical _chemical = new SimpleChemical<Object>(PATTERN, null);
 		
-		final Semaphore callRequired = new Semaphore(0); 
+		final AsyncTest async = new AsyncTest(); 
 		
-		plasma.on(PATTERN_1, new ChemicalHandler() {
+		plasma.on(PATTERN, new ChemicalHandler() {
 			@Override
 			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
 				assertNull(callback);
 				assertSame(_chemical, chemical);
 				assertSame(_sender, sender);
 				
-				System.out.println("testEmitSingleOn - handler invoked");
-				
-				callRequired.release();
+				async.done();
 				return true; //finish walking
 			}
 		}, _receiver);
 
 		plasma.emit(_chemical, null, _sender);
+	
+		async.awaitAsync();
+	}
+	
+	@Test
+	public void testEmitMultiOnWithStop() throws Exception {
+		final Organel _receiver1 = getFakeOrganel(plasma);
+		final Organel _receiver2 = getFakeOrganel(plasma);
+		final Organel _sender = getFakeOrganel(plasma);
+		final Chemical _chemical = new SimpleChemical<Object>(PATTERN, null);
 		
-		if (! callRequired.tryAcquire(15, TimeUnit.SECONDS)) {
-			fail("Timed out waiting for the handler to be invoked");
-		}
+		final AsyncTest async = new AsyncTest(); 
+		
+		plasma.on(PATTERN, new ChemicalHandler() {
+			@Override
+			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
+				assertNull(callback);
+				assertSame(_chemical, chemical);
+				assertSame(_sender, sender);
+				
+				async.done();
+				return true; //finish walking
+			}
+		}, _receiver1);
+		
+		plasma.on(PATTERN, new ChemicalHandler() {
+			@Override
+			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
+				fail("this one should not be invoked");
+				return false;
+			}
+		}, _receiver2);
+		
+		plasma.emit(_chemical, null, _sender);
+	
+		async.awaitAsync();
+	}
+	
+	@Test
+	public void testEmitMultiOnWithoutStop() throws Exception {
+		final Organel _receiver1 = getFakeOrganel(plasma);
+		final Organel _receiver2 = getFakeOrganel(plasma);
+		final Organel _sender = getFakeOrganel(plasma);
+		final Chemical _chemical = new SimpleChemical<Object>(PATTERN, null);
+		
+		final AsyncTest async = new AsyncTest(); 
+		
+		plasma.on(PATTERN, new ChemicalHandler() {
+			@Override
+			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
+				assertNull(callback);
+				assertSame(_chemical, chemical);
+				assertSame(_sender, sender);
+				
+				async.done();
+				return false; //finish walking
+			}
+		}, _receiver1);
+		
+		plasma.on(PATTERN, new ChemicalHandler() {
+			@Override
+			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
+				assertNull(callback);
+				assertSame(_chemical, chemical);
+				assertSame(_sender, sender);
+				
+				async.done();
+				return true;
+			}
+		}, _receiver2);
+		
+		plasma.emit(_chemical, null, _sender);
+	
+		async.awaitAsync();
 	}
 	
     @Parameterized.Parameters
     public static Collection<Object[]> instancesToTest() {
     	Collection<Object[]> result = new ArrayList<>();
-        result.add(new Object[]{  new PlasmaImpl()  });
+        result.add(new Object[]{  PlasmaImpl.class  });
         return result;
     }
 }

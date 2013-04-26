@@ -18,6 +18,7 @@ public class DNATestCase {
 	@Test
 	public void testLoadDir() throws JsonParseException, IOException {
 		final DNA dna = new DNAImpl();
+		final AsyncTest async = new AsyncTest();
 		dna.loadDir(Paths.get("src/test/resources"), "", new Runnable() {
 			
 			@Override
@@ -26,9 +27,11 @@ public class DNATestCase {
 				Map<String, Object> expected = new HashMap<>();
 				expected.put("superb", 7000);
 				assertEquals(expected, dna.selectBranch("example.item1"));
+				async.done();
 			}
 			
 		});
+		async.awaitAsync();
 	}
 
 }
