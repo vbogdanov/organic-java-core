@@ -29,7 +29,18 @@ public class PlasmaTests {
     private Organel _sender;
     private Chemical _chemical;
 	
-    private AsyncTest async; 
+    private AsyncTest async;
+    ChemicalHandler defaultHandler = new ChemicalHandler() {
+		@Override
+		public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
+			assertNull(callback);
+			assertSame(_chemical, chemical);
+			assertSame(_sender, sender);
+			
+			async.done();
+			return true; //finish walking
+		}
+	};
     
     @Before
     public void setUp() throws InstantiationException, IllegalAccessException {
@@ -67,17 +78,7 @@ public class PlasmaTests {
 	
 	@Test
 	public void testEmitSingleOn() throws Exception {
-		plasma.on(PATTERN, new ChemicalHandler() {
-			@Override
-			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
-				assertNull(callback);
-				assertSame(_chemical, chemical);
-				assertSame(_sender, sender);
-				
-				async.done();
-				return true; //finish walking
-			}
-		}, _receiver);
+		plasma.on(PATTERN, defaultHandler, _receiver);
 
 		plasma.emit(_chemical, null, _sender);
 	
@@ -88,17 +89,7 @@ public class PlasmaTests {
 	public void testEmitMultiOnWithStop() throws Exception {
 		final Organel _receiver2 = getFakeOrganel(plasma);
 		
-		plasma.on(PATTERN, new ChemicalHandler() {
-			@Override
-			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
-				assertNull(callback);
-				assertSame(_chemical, chemical);
-				assertSame(_sender, sender);
-				
-				async.done();
-				return true; //finish walking
-			}
-		}, _receiver);
+		plasma.on(PATTERN, defaultHandler, _receiver);
 		
 		plasma.on(PATTERN, new ChemicalHandler() {
 			@Override
@@ -129,17 +120,7 @@ public class PlasmaTests {
 			}
 		}, _receiver);
 		
-		plasma.on(PATTERN, new ChemicalHandler() {
-			@Override
-			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
-				assertNull(callback);
-				assertSame(_chemical, chemical);
-				assertSame(_sender, sender);
-				
-				async.done();
-				return true;
-			}
-		}, _receiver2);
+		plasma.on(PATTERN, defaultHandler, _receiver2);
 		
 		plasma.emit(_chemical, null, _sender);
 	
@@ -148,17 +129,7 @@ public class PlasmaTests {
 	
 	@Test
 	public void testOnTwice() throws Exception {
-		plasma.on(PATTERN, new ChemicalHandler() {
-			@Override
-			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
-				assertNull(callback);
-				assertSame(_chemical, chemical);
-				assertSame(_sender, sender);
-				
-				async.done();
-				return true; //finish walking
-			}
-		}, _receiver);
+		plasma.on(PATTERN, defaultHandler, _receiver);
 
 		plasma.emit(_chemical, null, _sender);
 		plasma.emit(_chemical, null, _sender);
@@ -169,17 +140,7 @@ public class PlasmaTests {
 	
 	@Test
 	public void testOnce() throws Exception {
-		plasma.once(PATTERN, new ChemicalHandler() {
-			@Override
-			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
-				assertNull(callback);
-				assertSame(_chemical, chemical);
-				assertSame(_sender, sender);
-				
-				async.done();
-				return true; //finish walking
-			}
-		}, _receiver);
+		plasma.once(PATTERN, defaultHandler, _receiver);
 
 		plasma.emit(_chemical, null, _sender);
 		plasma.emit(_chemical, null, _sender);
@@ -188,6 +149,21 @@ public class PlasmaTests {
 		async.noMore();
 	}
 	
+	
+	@Test
+	public void testOf() throws Exception {
+		
+		
+		plasma.on(PATTERN, defaultHandler, _receiver);
+
+		plasma.emit(_chemical, null, _sender);
+		
+		plasma.off(PATTERN, defaultHandler, _receiver);
+		plasma.emit(_chemical, null, _sender);
+	
+		async.awaitAsync();
+		async.noMore();
+	}
 	
     @Parameterized.Parameters
     public static Collection<Object[]> instancesToTest() {

@@ -6,7 +6,7 @@ public class ChainAwareChemicalHandler {
 	
 	private ChemicalHandler handler;
 	private Organel receiver;
-	private volatile boolean used = false;
+	private boolean used = false;
 	private boolean once = false;
 	
 	public ChainAwareChemicalHandler(ChemicalHandler handler, Organel reciever) {
@@ -39,6 +39,7 @@ public class ChainAwareChemicalHandler {
 		if (! done) {
 			enqueChain(chain, chemical, sender, callback);
 		}
+		
 	}
 
 	private void enqueue(final Chemical chemical, final Organel sender, final Iterator<ChainAwareChemicalHandler> chain, final Runnable callback) {
