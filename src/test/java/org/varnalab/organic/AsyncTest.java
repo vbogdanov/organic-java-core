@@ -26,4 +26,20 @@ public class AsyncTest {
 	public void done() {
 		callsMade.release();
 	}
+	
+	
+
+	public void noMore(long timeout, TimeUnit unit) {
+		try {
+			if(callsMade.tryAcquire(timeout, unit)) {
+				fail("async.done() invoked");
+			}
+		} catch (InterruptedException e) {
+			fail("Thread interupted");
+		}
+	}
+
+	public void noMore() {
+		noMore(5, TimeUnit.SECONDS);
+	}
 }

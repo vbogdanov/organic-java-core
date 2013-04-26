@@ -25,10 +25,21 @@ public class PlasmaTests {
     
     private Plasma plasma;
     
+    private Organel _receiver;
+    private Organel _sender;
+    private Chemical _chemical;
+	
+    private AsyncTest async; 
+    
     @Before
     public void setUp() throws InstantiationException, IllegalAccessException {
-    	System.out.println("creating plasma");
+  	
     	plasma = plasmaClass.newInstance();
+    	_receiver = getFakeOrganel(plasma);
+    	_sender = getFakeOrganel(plasma);
+    	_chemical = new SimpleChemical<Object>(PATTERN, null);
+    	
+    	async = new AsyncTest(); 
     }
     
     private Organel getFakeOrganel(Plasma plasma) {
@@ -47,8 +58,7 @@ public class PlasmaTests {
 
 	@Test
 	public void testEmitWithNoListener() throws Exception {
-		Chemical chem = new SimpleChemical<Object>("NO ONE LISTENS FOR THIS", null);
-		plasma.emit(chem, null, null);
+		plasma.emit(_chemical, null, null);
 		
 		//no exceptions were thrown
 	}
@@ -57,12 +67,6 @@ public class PlasmaTests {
 	
 	@Test
 	public void testEmitSingleOn() throws Exception {
-		final Organel _receiver = getFakeOrganel(plasma);
-		final Organel _sender = getFakeOrganel(plasma);
-		final Chemical _chemical = new SimpleChemical<Object>(PATTERN, null);
-		
-		final AsyncTest async = new AsyncTest(); 
-		
 		plasma.on(PATTERN, new ChemicalHandler() {
 			@Override
 			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
@@ -82,12 +86,7 @@ public class PlasmaTests {
 	
 	@Test
 	public void testEmitMultiOnWithStop() throws Exception {
-		final Organel _receiver1 = getFakeOrganel(plasma);
 		final Organel _receiver2 = getFakeOrganel(plasma);
-		final Organel _sender = getFakeOrganel(plasma);
-		final Chemical _chemical = new SimpleChemical<Object>(PATTERN, null);
-		
-		final AsyncTest async = new AsyncTest(); 
 		
 		plasma.on(PATTERN, new ChemicalHandler() {
 			@Override
@@ -99,7 +98,7 @@ public class PlasmaTests {
 				async.done();
 				return true; //finish walking
 			}
-		}, _receiver1);
+		}, _receiver);
 		
 		plasma.on(PATTERN, new ChemicalHandler() {
 			@Override
@@ -116,12 +115,7 @@ public class PlasmaTests {
 	
 	@Test
 	public void testEmitMultiOnWithoutStop() throws Exception {
-		final Organel _receiver1 = getFakeOrganel(plasma);
 		final Organel _receiver2 = getFakeOrganel(plasma);
-		final Organel _sender = getFakeOrganel(plasma);
-		final Chemical _chemical = new SimpleChemical<Object>(PATTERN, null);
-		
-		final AsyncTest async = new AsyncTest(); 
 		
 		plasma.on(PATTERN, new ChemicalHandler() {
 			@Override
@@ -133,7 +127,7 @@ public class PlasmaTests {
 				async.done();
 				return false; //finish walking
 			}
-		}, _receiver1);
+		}, _receiver);
 		
 		plasma.on(PATTERN, new ChemicalHandler() {
 			@Override
@@ -152,10 +146,54 @@ public class PlasmaTests {
 		async.awaitAsync();
 	}
 	
+	@Test
+	public void testOnTwice() throws Exception {
+		plasma.on(PATTERN, new ChemicalHandler() {
+			@Override
+			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
+				assertNull(callback);
+				assertSame(_chemical, chemical);
+				assertSame(_sender, sender);
+				
+				async.done();
+				return true; //finish walking
+			}
+		}, _receiver);
+
+		plasma.emit(_chemical, null, _sender);
+		plasma.emit(_chemical, null, _sender);
+	
+		async.awaitAsync();
+		async.awaitAsync();
+	}
+	
+	@Test
+	public void testOnce() throws Exception {
+		plasma.once(PATTERN, new ChemicalHandler() {
+			@Override
+			public boolean handle(Chemical chemical, Organel sender, Runnable callback) {
+				assertNull(callback);
+				assertSame(_chemical, chemical);
+				assertSame(_sender, sender);
+				
+				async.done();
+				return true; //finish walking
+			}
+		}, _receiver);
+
+		plasma.emit(_chemical, null, _sender);
+		plasma.emit(_chemical, null, _sender);
+	
+		async.awaitAsync();
+		async.noMore();
+	}
+	
+	
     @Parameterized.Parameters
     public static Collection<Object[]> instancesToTest() {
     	Collection<Object[]> result = new ArrayList<>();
         result.add(new Object[]{  PlasmaImpl.class  });
+        //add other implementations here to test them
         return result;
     }
 }
