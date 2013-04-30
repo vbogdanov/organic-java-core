@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.varnalab.organic.api.Nucleus;
 import org.varnalab.organic.api.Organel;
-import org.varnalab.organic.api.Organic;
 import org.varnalab.organic.api.Plasma;
 
 public class NucleusImpl implements Nucleus {
