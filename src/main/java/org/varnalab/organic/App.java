@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.varnalab.organic.api.Cell;
-import org.varnalab.organic.impl.DNAImpl;
+import org.varnalab.organic.impl.DNA;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
@@ -17,7 +17,7 @@ public class App
     public static void main( String[] args ) throws JsonParseException, IOException
     {
         System.out.println( "Hello World!" );
-        final DNAImpl dna = new DNAImpl();
+        final DNA dna = new DNA();
         
         dna.loadDir(Paths.get(args[0]), "", new Runnable() {
 			@Override

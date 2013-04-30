@@ -13,15 +13,15 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DNAImpl {
+public class DNA {
 	private Map<String, Object> data = new HashMap<>();
 	private ObjectMapper mapper = new ObjectMapper();
 	
-	public DNAImpl() {
+	public DNA() {
 	}
 	
 	
-	public DNAImpl(Map<String, Object> data) {
+	public DNA(Map<String, Object> data) {
 		super();
 		this.data = data;
 	}

@@ -11,7 +11,7 @@ import org.varnalab.organic.api.Plasma;
 
 public class NucleusImpl implements Nucleus {
 
-	private DNAImpl dna;
+	private DNA dna;
 	private Plasma plasma;
 	private Map<Object, Organel> organelMap;
 	
@@ -19,9 +19,9 @@ public class NucleusImpl implements Nucleus {
 	@SuppressWarnings("unchecked")
 	public NucleusImpl(Object dna, Plasma plasma) {
 		super();
-		this.dna =  ((dna instanceof DNAImpl)? 
-				new DNAImpl((Map<String, Object>) dna):
-				(DNAImpl) dna);
+		this.dna =  ((dna instanceof DNA)? 
+				new DNA((Map<String, Object>) dna):
+				(DNA) dna);
 		this.plasma = plasma;
 	}
 
