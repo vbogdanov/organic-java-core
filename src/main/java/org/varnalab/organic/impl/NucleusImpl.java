@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import org.varnalab.organic.api.DNA;
 import org.varnalab.organic.api.Nucleus;
 import org.varnalab.organic.api.Organel;
 import org.varnalab.organic.api.Organic;
@@ -13,14 +12,16 @@ import org.varnalab.organic.api.Plasma;
 
 public class NucleusImpl implements Nucleus {
 
-	private DNA dna;
+	private DNAImpl dna;
 	private Plasma plasma;
 	private Map<Object, Organel> organelMap;
 	
 	
-	public NucleusImpl(DNA dna, Plasma plasma) {
+	public NucleusImpl(Object dna, Plasma plasma) {
 		super();
-		this.dna = dna;
+		this.dna =  ((dna instanceof DNAImpl)? 
+				new DNAImpl((Map<String, Object>) dna):
+				(DNAImpl) dna);
 		this.plasma = plasma;
 	}
 

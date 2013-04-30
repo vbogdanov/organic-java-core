@@ -14,7 +14,7 @@ import org.varnalab.organic.impl.PlasmaImpl;
 public class Cell implements Organic {
 	public interface CoreFactory {
 		public Membrane createMembrane(Nucleus nucleus, Plasma plasma);
-		public Nucleus createNucleus(DNA dna, Plasma plasma);
+		public Nucleus createNucleus(Object dna, Plasma plasma);
 		public Plasma createPlasma();
 	}
 	
@@ -26,7 +26,7 @@ public class Cell implements Organic {
 		}
 
 		@Override
-		public Nucleus createNucleus(DNA dna, Plasma plasma) {
+		public Nucleus createNucleus(Object dna, Plasma plasma) {
 			return new NucleusImpl(dna, plasma);
 		}
 
@@ -42,7 +42,7 @@ public class Cell implements Organic {
 	private Membrane membrane;
 	private Collection<Organel> organelles;
 	
-	public Cell(DNA dna, CoreFactory core) {
+	public Cell(Object dna, CoreFactory core) {
 		if (core == null) {
 			core = new DefaultFactory();
 		}

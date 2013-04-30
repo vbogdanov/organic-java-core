@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.varnalab.organic.api.DNA;
 import org.varnalab.organic.impl.DNAImpl;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -17,7 +16,7 @@ public class DNATestCase {
 
 	@Test
 	public void testLoadDir() throws JsonParseException, IOException {
-		final DNA dna = new DNAImpl();
+		final DNAImpl dna = new DNAImpl();
 		final AsyncTest async = new AsyncTest();
 		dna.loadDir(Paths.get("src/test/resources"), "", new Runnable() {
 			

@@ -8,13 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.varnalab.organic.JSONUtil;
-import org.varnalab.organic.api.DNA;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DNAImpl implements DNA {
+public class DNAImpl {
 	private Map<String, Object> data = new HashMap<>();
 	private ObjectMapper mapper = new ObjectMapper();
 	
@@ -85,7 +84,6 @@ public class DNAImpl implements DNA {
 	}
 
 
-	@Override
 	public Map<String, Object> selectBranch(String namespace) {
 		return selectBranch(namespace, false);
 	}
