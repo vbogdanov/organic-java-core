@@ -6,7 +6,7 @@ import org.varnalab.organic.api.Chemical;
 import org.varnalab.organic.api.ChemicalHandler;
 import org.varnalab.organic.api.Organel;
 
-public class ChainAwareChemicalHandler {
+class ChainAwareChemicalHandler {
 	
 	private ChemicalHandler handler;
 	private Organel receiver;
