@@ -16,8 +16,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public abstract class Organel {
 	private Plasma plasma;
-	protected Object parent;
 	protected Map<String, Object> config;
+	protected Object parent;
 	
 	private BlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
 	private final Thread thread = new Thread(new Runnable() {
@@ -38,7 +38,7 @@ public abstract class Organel {
 		}
 	});
 
-	public Organel(Plasma plasma, Object parent, Map<String, Object> config) {
+	public Organel(Plasma plasma, Map<String, Object> config, Object parent) {
 		super();
 		
 		if (plasma == null) {
