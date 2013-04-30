@@ -2,7 +2,7 @@ package org.varnalab.organic.api;
 
 import java.util.Collection;
 
-public class Membrane implements Organic {
+public class Membrane {
 	private Plasma plasma;
 	private Collection<Organel> holes;
 	

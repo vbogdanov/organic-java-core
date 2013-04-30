@@ -88,6 +88,7 @@ public class DNAImpl {
 		return selectBranch(namespace, false);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Map<String, Object> selectBranch(String namespace, boolean fillData) {
 		String[] keys = namespace.split("\\.");
 		Map<String, Object> current = data;

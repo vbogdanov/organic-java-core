@@ -17,6 +17,7 @@ public class NucleusImpl implements Nucleus {
 	private Map<Object, Organel> organelMap;
 	
 	
+	@SuppressWarnings("unchecked")
 	public NucleusImpl(Object dna, Plasma plasma) {
 		super();
 		this.dna =  ((dna instanceof DNAImpl)? 
@@ -32,7 +33,7 @@ public class NucleusImpl implements Nucleus {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Organel> createNamespace(String namespace, Organic parent) {
+	public Collection<Organel> createNamespace(String namespace, Object parent) {
 		Collection<Organel> result = new ArrayList<>();
 		Map<String, Object> branch = dna.selectBranch(namespace);
 	    for(String key: branch.keySet()) {
@@ -50,7 +51,7 @@ public class NucleusImpl implements Nucleus {
 	      
 	      try {
 			instance = (Organel) Class.forName(source)
-			  .getConstructor(Plasma.class, Map.class, Organic.class)
+			  .getConstructor(Plasma.class, Map.class, Object.class)
 			  .newInstance(plasma, config, parent);
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException

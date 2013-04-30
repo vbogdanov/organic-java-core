@@ -1,6 +1,10 @@
-package org.varnalab.organic.api;
+package org.varnalab.organic.impl;
 
 import java.util.Iterator;
+
+import org.varnalab.organic.api.Chemical;
+import org.varnalab.organic.api.ChemicalHandler;
+import org.varnalab.organic.api.Organel;
 
 public class ChainAwareChemicalHandler {
 	

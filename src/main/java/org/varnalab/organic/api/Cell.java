@@ -11,7 +11,7 @@ import org.varnalab.organic.impl.PlasmaImpl;
  * var xtend = require("xtend");                                                                                                                                                                             
  */
 
-public class Cell implements Organic {
+public class Cell {
 	public interface CoreFactory {
 		public Membrane createMembrane(Nucleus nucleus, Plasma plasma);
 		public Nucleus createNucleus(Object dna, Plasma plasma);

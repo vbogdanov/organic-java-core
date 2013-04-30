@@ -14,9 +14,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author valeri
  * 
  */
-public abstract class Organel implements Organic {
+public abstract class Organel {
 	private Plasma plasma;
-	protected Organic parent;
+	protected Object parent;
 	protected Map<String, Object> config;
 	
 	private BlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
@@ -38,7 +38,7 @@ public abstract class Organel implements Organic {
 		}
 	});
 
-	public Organel(Plasma plasma, Organic parent, Map<String, Object> config) {
+	public Organel(Plasma plasma, Object parent, Map<String, Object> config) {
 		super();
 		
 		if (plasma == null) {

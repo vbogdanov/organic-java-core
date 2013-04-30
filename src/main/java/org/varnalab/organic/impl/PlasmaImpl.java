@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.varnalab.organic.api.ChainAwareChemicalHandler;
 import org.varnalab.organic.api.Chemical;
 import org.varnalab.organic.api.ChemicalHandler;
 import org.varnalab.organic.api.Organel;
