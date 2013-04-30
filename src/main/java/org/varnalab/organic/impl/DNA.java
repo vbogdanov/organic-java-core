@@ -13,6 +13,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * This class represents an information about the cell to build, stored in JSON-like structure. This class
+ * presents method for operating on such structures, including loading
+ * additional info from the file system or fetching a subset of it.
+ */
 public class DNA {
 	private Map<String, Object> data = new HashMap<>();
 	private ObjectMapper mapper = new ObjectMapper();

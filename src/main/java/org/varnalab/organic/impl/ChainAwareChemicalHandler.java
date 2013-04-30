@@ -5,7 +5,14 @@ import java.util.Iterator;
 import org.varnalab.organic.api.Chemical;
 import org.varnalab.organic.api.ChemicalHandler;
 import org.varnalab.organic.api.Organel;
-
+ 
+/**
+ * Helper class, used by the {@link PlasmaImpl} to wrap {@link ChemicalHandler}.
+ * In combination with {@link PlasmaImpl} provides two conditions:
+ * 1) a chemical is always handled in a single thread, unless the developer explicitly introduces additional one
+ * 2) an organel operates in a single event thread unless the developer explicitly introduces additional one
+ * 
+ */
 class ChainAwareChemicalHandler {
 	
 	private ChemicalHandler handler;
@@ -32,6 +39,7 @@ class ChainAwareChemicalHandler {
 		boolean skip;
 		synchronized (this) {
 			skip = once && used;
+			//can't message self:
 			skip |= receiver == sender;
 			
 			used = ! skip;

@@ -9,6 +9,9 @@ import org.varnalab.organic.api.Nucleus;
 import org.varnalab.organic.api.Organel;
 import org.varnalab.organic.api.Plasma;
 
+/**
+ * This class is a simple implementation of {@link Nucleus} based on {@link DNA}.
+ */
 public class NucleusImpl implements Nucleus {
 
 	private DNA dna;
