@@ -22,6 +22,8 @@ public class PlasmaBasedCommunication {
 			@Override
 			public void run() {
 				new Cell(dna, null);
+				
+				//simulate access from the outside:
 				OrganelA remoteInstance = OrganelA.registry.get(8888);
 				remoteInstance.startCommunication(new Runnable() {
 					@Override
